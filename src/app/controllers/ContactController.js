@@ -3,7 +3,8 @@ const ContactsRepository = require('../repositories/ContactsRepository');
 class ContactController {
   async index(request, response) {
     //lsit all registers
-    const constacts = await ContactsRepository.findAll();
+    const { orderBy } = request.query;
+    const constacts = await ContactsRepository.findAll(orderBy);
 
     response.json(constacts);
   }
@@ -80,12 +81,6 @@ class ContactController {
   async delete(request, response) {
     // delete register
     const { id } = request.params;
-    const contact = await ContactsRepository.findById(id);
-
-    if (!contact) {
-      // 404: Not Found
-      return response.status(404).json({ error: 'User not found' });
-    }
 
     await ContactsRepository.delete(id);
     // 204: No Content
